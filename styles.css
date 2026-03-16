@@ -1,0 +1,251 @@
+/**
+ * Pomodoro Pro: Sovereign (Version 5.0)
+ * Design Paradigm: System-Integrated Minimalist OS
+ */
+
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --text-main: #1a202c;
+    --text-muted: #718096;
+    --primary: #e74c3c;
+    --primary-glow: rgba(231, 76, 60, 0.3);
+    --accent: #3182ce;
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --border-color: rgba(0, 0, 0, 0.05);
+    --radius-lg: 1.5rem;
+    --radius-md: 0.75rem;
+    --shadow-focus: 0 20px 50px rgba(0, 0, 0, 0.1);
+}
+
+/* --- 1. SYSTEM RESET & PWA FOUNDATION --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-secondary);
+    color: var(--text-main);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Sovereign apps don't scroll the body */
+    user-select: none;
+    transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.work-mode { --primary: #e74c3c; --primary-glow: rgba(231, 76, 60, 0.2); }
+body.break-mode { --primary: #2ecc71; --primary-glow: rgba(46, 204, 113, 0.2); }
+
+/* --- 2. COMMAND PALETTE (SPOTLIGHT) --- */
+#command-palette {
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+}
+
+.palette-container {
+    background: var(--glass-bg);
+    backdrop-filter: blur(25px);
+    width: 90%;
+    max-width: 600px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-focus);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transform: translateY(-100px);
+    transition: transform 0.3s ease;
+    padding: 1rem;
+}
+
+#command-palette:not(.hidden) .palette-container {
+    transform: translateY(0);
+}
+
+#palette-input {
+    width: 100%;
+    padding: 1.2rem;
+    background: transparent;
+    border: none;
+    font-size: 1.25rem;
+    color: var(--text-main);
+    outline: none;
+}
+
+.command-hint {
+    padding: 0.8rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-color);
+}
+
+kbd {
+    background: #edf2f7;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: monospace;
+    box-shadow: 0 2px 0 #cbd5e0;
+}
+
+/* --- 3. SOVEREIGN SHELL (MAIN APP) --- */
+#app {
+    background: var(--bg-primary);
+    width: 100%;
+    max-width: 440px;
+    padding: 2rem;
+    border-radius: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    position: relative;
+    z-index: 100;
+}
+
+#status-bar {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#connection-status { color: #2ecc71; margin-right: 5px; }
+
+/* --- 4. TIMER & VISUALIZER --- */
+#timer-display {
+    position: relative;
+    margin: 2rem 0;
+}
+
+#time-left {
+    font-size: 6.5rem;
+    font-weight: 900;
+    color: var(--primary);
+    letter-spacing: -4px;
+    font-variant-numeric: tabular-nums;
+    position: relative;
+    z-index: 2;
+}
+
+#audio-visualizer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 120%;
+    z-index: 1;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* --- 5. ANALYTICS HEATMAP --- */
+#analytics-dashboard {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+#analytics-dashboard header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+#analytics-dashboard h3 { font-size: 0.8rem; color: var(--text-muted); }
+
+#toggle-analytics {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 1rem;
+}
+
+.cell {
+    aspect-ratio: 1;
+    background: #edf2f7;
+    border-radius: 4px;
+    transition: transform 0.2s;
+}
+
+.cell:hover { transform: scale(1.2); z-index: 2; }
+
+.level-0 { background: #edf2f7; }
+.level-1 { background: #c6f6d5; }
+.level-2 { background: #48bb78; }
+.level-3 { background: #2f855a; }
+
+.heatmap-legend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+.heatmap-legend .cells { display: flex; gap: 3px; }
+.heatmap-legend .cell { width: 10px; height: 10px; }
+
+/* --- 6. SOVEREIGN CONTROLS --- */
+#controls {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.primary-btn {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 10px 20px var(--primary-glow);
+}
+
+.secondary-btn { background: #edf2f7; color: var(--text-main); }
+.tertiary-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); }
+
+/* --- 7. TASK ENGINE --- */
+#task-list {
+    margin-top: 1rem;
+    max-height: 120px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* --- 8. UTILITIES --- */
+.hidden { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+/* Custom Scrollbar for Sovereign Feel */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 10px; }
